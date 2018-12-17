@@ -12,6 +12,7 @@ import fetch from 'node-fetch';
 import { writeFile, makeDir } from './lib/fs';
 import runServer from './runServer';
 
+// 将对应的路由渲染成静态的html
 // Enter your paths here which you want to render as static
 // Example:
 // const routes = [

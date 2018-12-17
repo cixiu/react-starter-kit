@@ -1,24 +1,35 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
-import browserSync from 'browser-sync';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import errorOverlayMiddleware from 'react-dev-utils/errorOverlayMiddleware';
-import webpackConfig from './webpack.config';
+import chalk from 'chalk';
+import dotenv from 'dotenv';
+import webpackConfig from './webpack/webpack.config';
 import run, { format } from './run';
 import clean from './clean';
 
-const isDebug = !process.argv.includes('--release');
+const envExamplePath = path.join(__dirname, '../.env.example');
+const envDevPath = path.join(__dirname, '../.env.dev');
+
+if (fs.existsSync(envDevPath)) {
+  console.info(
+    `${format(new Date())} ⚙  ${chalk.magentaBright(
+      'Using .env.dev file',
+    )}`,
+  );
+  dotenv.config({ path: envDevPath });
+} else {
+  // 如果没有 .env.dev 文件， 那么就使用 .env.example 文件作为配置文件
+  console.info(
+    `${format(new Date())} ⚙️  ${chalk.magentaBright(
+      'Using .env.example file',
+    )}`,
+  );
+  dotenv.config({ path: envExamplePath });
+}
 
 // https://webpack.js.org/configuration/watch/#watchoptions
 const watchOptions = {
@@ -26,7 +37,12 @@ const watchOptions = {
   // Uncomment next line if it is your case (use true or interval in milliseconds)
   // poll: true,
   // Decrease CPU or memory usage in some file systems
-  // ignored: /node_modules/,
+  ignored: /node_modules/,
+};
+
+// 控制终端的 HMR log 是否显示
+const hotOption = {
+  info: false,
 };
 
 function createCompilationPromise(name, compiler, config) {
@@ -34,23 +50,23 @@ function createCompilationPromise(name, compiler, config) {
     let timeStart = new Date();
     compiler.hooks.compile.tap(name, () => {
       timeStart = new Date();
-      console.info(`[${format(timeStart)}] Compiling '${name}'...`);
+      console.info(`${format(timeStart)} 📦 Compiling '${name}'...`);
     });
 
     compiler.hooks.done.tap(name, stats => {
-      console.info(stats.toString(config.stats));
       const timeEnd = new Date();
       const time = timeEnd.getTime() - timeStart.getTime();
       if (stats.hasErrors()) {
+        console.info(stats.toString(config.stats));
         console.info(
-          `[${format(timeEnd)}] Failed to compile '${name}' after ${time} ms`,
+          `${format(timeEnd)} ❌ Failed to compile '${name}' after ${time} ms`,
         );
         reject(new Error('Compilation failed!'));
       } else {
         console.info(
-          `[${format(
-            timeEnd,
-          )}] Finished '${name}' compilation after ${time} ms`,
+          `${format(timeEnd)} ✨ ${chalk.greenBright(
+            `Finished '${name}' compilation after ${time} ms`,
+          )}`,
         );
         resolve(stats);
       }
@@ -159,18 +175,22 @@ async function start() {
       .check(true)
       .then(updatedModules => {
         if (!updatedModules) {
-          if (fromUpdate) {
+          if (fromUpdate && hotOption.info) {
             console.info(`${hmrPrefix}Update applied.`);
           }
           return;
         }
-        if (updatedModules.length === 0) {
+        if (updatedModules.length === 0 && hotOption.info) {
           console.info(`${hmrPrefix}Nothing hot updated.`);
         } else {
-          console.info(`${hmrPrefix}Updated modules:`);
-          updatedModules.forEach(moduleId =>
-            console.info(`${hmrPrefix} - ${moduleId}`),
-          );
+          if (hotOption.info) {
+            console.info(`${hmrPrefix}Updated modules:`);
+          }
+          updatedModules.forEach(moduleId => {
+            if (hotOption.info) {
+              console.info(`${hmrPrefix} - ${moduleId}`);
+            }
+          });
           checkForUpdate(true);
         }
       })
@@ -191,7 +211,14 @@ async function start() {
 
   serverCompiler.watch(watchOptions, (error, stats) => {
     if (app && !error && !stats.hasErrors()) {
+      const startTimeStamp = Date.now();
       checkForUpdate().then(() => {
+        const endTimeStamp = new Date();
+        console.info(
+          `${format(endTimeStamp)} ${chalk.bgMagenta(
+            '[HMR]',
+          )} 🔥 Update finished ${+endTimeStamp - startTimeStamp}ms`,
+        );
         appPromiseIsResolved = true;
         appPromiseResolve();
       });
@@ -203,7 +230,7 @@ async function start() {
   await serverPromise;
 
   const timeStart = new Date();
-  console.info(`[${format(timeStart)}] Launching server...`);
+  console.info(`${format(timeStart)} 🚗 Launching server...`);
 
   // Load compiled src/server.js as a middleware
   // eslint-disable-next-line global-require, import/no-unresolved
@@ -211,23 +238,17 @@ async function start() {
   appPromiseIsResolved = true;
   appPromiseResolve();
 
-  // Launch the development server with Browsersync and HMR
-  await new Promise((resolve, reject) =>
-    browserSync.create().init(
-      {
-        // https://www.browsersync.io/docs/options
-        server: 'src/server.js',
-        middleware: [server],
-        open: !process.argv.includes('--silent'),
-        ...(isDebug ? {} : { notify: false, ui: false }),
-      },
-      (error, bs) => (error ? reject(error) : resolve(bs)),
-    ),
-  );
+  server.listen(3000, () => {
+    console.info(
+      `${format(new Date())} 🚀 ${chalk.greenBright(
+        `The server is running at http://localhost:${3000}/`,
+      )}`,
+    );
+  });
 
   const timeEnd = new Date();
   const time = timeEnd.getTime() - timeStart.getTime();
-  console.info(`[${format(timeEnd)}] Server launched after ${time} ms`);
+  console.info(`${format(timeEnd)} ⏰ Server launched after ${time} ms`);
   return server;
 }
 

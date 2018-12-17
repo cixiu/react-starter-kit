@@ -44,10 +44,13 @@ hotClient.useCustomOverlay({
 hotClient.setOptionsAndConnect({
   name: 'client',
   reload: true,
+  // 保持客户端控制台干净
+  quiet: true,
 });
 
 startReportingRuntimeErrors({
   filename: '/assets/client.js',
+  // filename: '/static/js/client.js',
 });
 
 if (module.hot) {

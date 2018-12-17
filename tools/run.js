@@ -1,21 +1,15 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
+import chalk from 'chalk';
 
 export function format(time) {
-  return time.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, '$1');
+  const formatTime = time.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, '$1');
+  return chalk.gray(`[${formatTime}]`);
 }
 
 function run(fn, options) {
   const task = typeof fn.default === 'undefined' ? fn : fn.default;
   const start = new Date();
   console.info(
-    `[${format(start)}] Starting '${task.name}${
+    `${format(start)} 🚅 Starting '${task.name}${
       options ? ` (${options})` : ''
     }'...`,
   );
@@ -23,7 +17,7 @@ function run(fn, options) {
     const end = new Date();
     const time = end.getTime() - start.getTime();
     console.info(
-      `[${format(end)}] Finished '${task.name}${
+      `${format(end)} ⏰ Finished '${task.name}${
         options ? ` (${options})` : ''
       }' after ${time} ms`,
     );
