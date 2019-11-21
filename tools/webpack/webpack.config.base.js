@@ -142,23 +142,50 @@ export default {
           },
 
           // Process internal/project styles (from src folder)
+          // {
+          //   include: SRC_DIR,
+          //   // loader: 'css-loader',
+          //   loader: 'typings-for-css-modules-loader',
+          //   options: {
+          //     // CSS Loader https://github.com/webpack/css-loader
+          //     importLoaders: 2,
+          //     sourceMap: isDebug,
+          //     namedExport: true,
+          //     // CSS Modules https://github.com/css-modules/css-modules
+          //     modules: true,
+          //     camelCase: true,
+          //     slient: true,
+          //     localIdentName: isDebug
+          //       ? '[name]-[local]-[hash:base64:5]'
+          //       : '[hash:base64:5]',
+          //   },
+          // },
           {
             include: SRC_DIR,
+            use: [
+              'css-modules-typescript-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true
+                }
+              }
+            ]
             // loader: 'css-loader',
-            loader: 'typings-for-css-modules-loader',
-            options: {
-              // CSS Loader https://github.com/webpack/css-loader
-              importLoaders: 2,
-              sourceMap: isDebug,
-              namedExport: true,
-              // CSS Modules https://github.com/css-modules/css-modules
-              modules: true,
-              camelCase: true,
-              slient: true,
-              localIdentName: isDebug
-                ? '[name]-[local]-[hash:base64:5]'
-                : '[hash:base64:5]',
-            },
+            // loader: 'css-modules-typescript-loader',
+            // options: {
+            //   // CSS Loader https://github.com/webpack/css-loader
+            //   // importLoaders: 2,
+            //   // sourceMap: isDebug,
+            //   // namedExport: true,
+            //   // CSS Modules https://github.com/css-modules/css-modules
+            //   modules: true,
+            //   // camelCase: true,
+            //   // slient: true,
+            //   localIdentName: isDebug
+            //     ? '[name]-[local]-[hash:base64:5]'
+            //     : '[hash:base64:5]',
+            // },
           },
 
           // Apply PostCSS plugins including autoprefixer
@@ -166,15 +193,7 @@ export default {
             loader: 'postcss-loader',
             options: {
               plugins: () => [
-                autoprefixer({
-                  browsers: [
-                    '>1%',
-                    'last 4 versions',
-                    'Firefox ESR',
-                    'not ie < 9', // React doesn't support IE8 anyway
-                  ],
-                  flexbox: 'no-2009',
-                }),
+                autoprefixer(),
               ],
             },
           },

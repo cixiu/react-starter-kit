@@ -1,8 +1,9 @@
 import React from 'react';
-import { IRoutes } from './routes';
+import { IRoute } from './routes';
+// import { Route } from 'universal-router';
 
 // The top-level (parent) route
-const routes: IRoutes = {
+const routes: IRoute = {
   path: '',
   // Keep in mind, routes are evaluated in order
   children: [
@@ -37,7 +38,7 @@ const routes: IRoutes = {
 
 // The error page is available by permanent url for development mode
 if (__DEV__) {
-  routes.children.unshift({
+  routes.children!.unshift({
     path: '/error',
     // action: require('../pages/Error').default,
     load: () => import(/* webpackChunkName: 'error' */ '@pages/Error'),

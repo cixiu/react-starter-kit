@@ -16,20 +16,28 @@ interface IWindow extends Window {
 declare const window: IWindow;
 
 interface IContext {
-  insertCss: (...styles: any[]) => () => void;
+  // insertCss: (...styles: any[]) => () => void;
   pathname: string;
-  query: queryString.OutputParams;
+  query: queryString.ParsedQuery;
   store: any;
 }
 
+const insertCss = (...styles: any[]) => {
+  // eslint-disable-next-line no-underscore-dangle
+  const removeCss = styles.map(x => x._insertCss());
+  return () => {
+    removeCss.forEach(f => f());
+  };
+};
+
 const context: IContext = {
-  insertCss: (...styles: any[]) => {
-    // eslint-disable-next-line no-underscore-dangle
-    const removeCss = styles.map(x => x._insertCss());
-    return () => {
-      removeCss.forEach(f => f());
-    };
-  },
+  // insertCss: (...styles: any[]) => {
+  //   // eslint-disable-next-line no-underscore-dangle
+  //   const removeCss = styles.map(x => x._insertCss());
+  //   return () => {
+  //     removeCss.forEach(f => f());
+  //   };
+  // },
   pathname: '',
   query: {},
   store: configureStore(window.__INITIAL_STATE__),
@@ -77,7 +85,9 @@ async function onLocationChange(location: Location, action?: Action) {
     const renderReactApp = isInitialRender ? ReactDOM.hydrate : ReactDOM.render;
     appInstance = renderReactApp(
       <Provider store={context.store}>
-        <App context={context}>{route.component}</App>
+        <App context={context} insertCss={insertCss}>
+          {route.component}
+        </App>
       </Provider>,
       container,
       () => {

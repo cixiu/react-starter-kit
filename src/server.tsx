@@ -75,7 +75,7 @@ app.get('*', async (req, res, next) => {
     // Global (context) variables that can be easily accessed from any React component
     // https://facebook.github.io/react/docs/context.html
     const context = {
-      insertCss,
+      // insertCss,
       // The twins below are wild, be careful!
       pathname: req.path,
       query: req.query,
@@ -92,7 +92,9 @@ app.get('*', async (req, res, next) => {
     const data = { ...route };
     data.children = ReactDOM.renderToString(
       <Provider store={store}>
-        <App context={context}>{route.component}</App>
+        <App context={context} insertCss={insertCss}>
+          {route.component}
+        </App>
       </Provider>,
     );
     data.styles = [{ id: 'css', cssText: [...css].join('') }];
@@ -176,11 +178,11 @@ if (!module.hot) {
 // -----------------------------------------------------------------------------
 // 开发环境
 declare const module: IHotNodeModule;
-interface IappExtendProps extends Express {
+interface IAppExtendProps extends Express {
   hot: IHot;
 }
 if (module.hot) {
-  (app as IappExtendProps).hot = module.hot;
+  (app as IAppExtendProps).hot = module.hot;
   module.hot.accept('./routes/router');
 }
 

@@ -44,13 +44,18 @@ const serverConfig = {
         include: /[\\/]node_modules[\\/].*antd/,
         use: [
           {
+            // for css-loader@3.x
+            loader: 'css-loader',
+            options: {
+              onlyLocals: true,
+            },
             // for css-loader@2.x
             /* loader: 'css-loader',
             options: {
               exportOnlyLocals: true,
             }, */
             // for css-loader@1.x
-            loader: 'css-loader/locals',
+            // loader: 'css-loader/locals',
           },
           {
             loader: 'less-loader',
