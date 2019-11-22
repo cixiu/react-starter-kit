@@ -1,9 +1,9 @@
 import React from 'react';
-import { IRoute } from './routes';
+import { TRoute } from './routes';
 // import { Route } from 'universal-router';
 
 // The top-level (parent) route
-const routes: IRoute = {
+const routes: TRoute = {
   path: '',
   // Keep in mind, routes are evaluated in order
   children: [
@@ -42,7 +42,6 @@ if (__DEV__) {
     path: '/error',
     // action: require('../pages/Error').default,
     load: () => import(/* webpackChunkName: 'error' */ '@pages/Error'),
-
   });
 }
 

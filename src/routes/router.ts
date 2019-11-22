@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import UniversalRouter from 'universal-router';
 import routes from '.';
+import { ActionReturn } from './routes';
 
-export default new UniversalRouter(routes, {
+export default new UniversalRouter<any, ActionReturn>(routes, {
   resolveRoute(context, params) {
     if (typeof context.route.load === 'function') {
       return context.route

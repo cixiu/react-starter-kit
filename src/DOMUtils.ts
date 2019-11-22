@@ -4,7 +4,7 @@ export function updateTag(
   keyValue: string,
   attrName: string,
   attrValue: string,
-) {
+): void {
   const node = document.querySelector(`${tagName}[${keyName}="${keyValue}"]`);
 
   if (node && node.getAttribute(attrName) === attrValue) {
@@ -23,14 +23,14 @@ export function updateTag(
   }
 }
 
-export function updateMeta(name: string, content: string) {
+export function updateMeta(name: string, content: string): void {
   updateTag('meta', 'name', name, 'content', content);
 }
 
-export function updateCustomMeta(property: string, content: string) {
+export function updateCustomMeta(property: string, content: string): void {
   updateTag('meta', 'property', property, 'content', content);
 }
 
-export function updateLink(rel: string, href: string) {
+export function updateLink(rel: string, href: string): void {
   updateTag('link', 'rel', rel, 'href', href);
 }

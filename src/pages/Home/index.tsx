@@ -1,9 +1,11 @@
 import React from 'react';
-import Home from './Home';
 import { changeCount } from '@store/actions/changeCount';
-import { IActionContext } from '@routes/routes';
+import { ActionContext, ActionReturn } from '@routes/routes';
 
-async function action(ctx: IActionContext, params: any) {
+import Home from './Home';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function action(ctx: ActionContext, params: any): Promise<ActionReturn> {
   if (ctx.store.getState().count !== 20) {
     ctx.store.dispatch(changeCount(10));
   }

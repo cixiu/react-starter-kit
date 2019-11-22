@@ -62,7 +62,7 @@ const clientConfig = {
       async: false,
       watch: [resolvePath('src')],
       tsconfig: resolvePath('tsconfig.json'),
-      tslint: resolvePath('tslint.json'),
+      eslint: true,
       checkSyntacticErrors: true,
       silent: true,
     }),

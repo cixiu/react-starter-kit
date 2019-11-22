@@ -1,9 +1,11 @@
 import React from 'react';
+import { ActionReturn } from '@routes/routes';
+
 import NotFound from './NotFound';
 
 const title = 'Page Not Found';
 
-function action() {
+function action(): ActionReturn {
   return {
     chunks: ['not-found'],
     title,

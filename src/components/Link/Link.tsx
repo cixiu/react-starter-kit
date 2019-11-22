@@ -1,26 +1,26 @@
 import React from 'react';
 import history from '../../history';
 
-function isLeftClickEvent(event: React.MouseEvent) {
+function isLeftClickEvent(event: React.MouseEvent): boolean {
   return event.button === 0;
 }
 
-function isModifiedEvent(event: React.MouseEvent) {
+function isModifiedEvent(event: React.MouseEvent): boolean {
   return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 }
 
-interface IProps {
+interface Props {
   to: string;
   children: React.ReactNode;
   onClick: (event: React.MouseEvent) => void;
 }
 
-class Link extends React.Component<IProps, {}> {
+class Link extends React.Component<Props, {}> {
   static defaultProps = {
     onClick: null,
   };
 
-  handleClick = (event: React.MouseEvent) => {
+  handleClick = (event: React.MouseEvent): void => {
     if (this.props.onClick) {
       console.log(event.target);
       this.props.onClick(event);
@@ -38,7 +38,7 @@ class Link extends React.Component<IProps, {}> {
     history.push(this.props.to);
   };
 
-  render() {
+  render(): JSX.Element {
     const { to, children, ...props } = this.props;
     return (
       <a href={to} {...props} onClick={this.handleClick}>

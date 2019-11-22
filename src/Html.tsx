@@ -1,9 +1,20 @@
 import React from 'react';
 import serialize from 'serialize-javascript';
+import { ActionReturn } from '@routes/routes';
 
-interface IProps {
-  title: string;
-  description: string;
+// interface Props {
+//   title: string;
+//   description: string;
+//   styles: Array<{
+//     id: string;
+//     cssText: string;
+//   }>;
+//   scripts: string[];
+//   app: { state: object };
+//   children: string;
+// }
+
+export interface HtmlProps extends ActionReturn {
   styles: Array<{
     id: string;
     cssText: string;
@@ -13,14 +24,14 @@ interface IProps {
   children: string;
 }
 
-class Html extends React.Component<IProps, {}> {
+class Html extends React.Component<HtmlProps, {}> {
   static defaultProps = {
     styles: [],
     scripts: [],
     app: { state: {} },
   };
 
-  render() {
+  render(): JSX.Element {
     const { title, description, styles, scripts, app, children } = this.props;
     return (
       <html className="no-js" lang="en">

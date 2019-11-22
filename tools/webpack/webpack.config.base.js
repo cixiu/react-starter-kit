@@ -85,11 +85,27 @@ export default {
     strictExportPresence: true,
 
     rules: [
+      // {
+      //   test: /\.(ts|tsx)$/,
+      //   enforce: 'pre',
+      //   loader: 'tslint-loader',
+      //   exclude: [resolvePath('node_modules')],
+      // },
+
+      // tslint has deprecated, use eslint instead
       {
-        test: /\.(ts|tsx)$/,
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
         enforce: 'pre',
-        loader: 'tslint-loader',
-        exclude: [resolvePath('node_modules')],
+        include: SRC_DIR,
+        use: [
+          {
+            options: {
+              formatter: require.resolve('react-dev-utils/eslintFormatter'),
+              eslintPath: require.resolve('eslint'),
+            },
+            loader: require.resolve('eslint-loader'),
+          },
+        ],
       },
       // Rules for JS / JSX
       {
@@ -142,6 +158,10 @@ export default {
           },
 
           // Process internal/project styles (from src folder)
+          // typings-for-css-modules-loader and css-loader@1.x
+          // typings-for-css-modules-loader has deprecated
+          // use the following  css-modules-typescript-loader
+
           // {
           //   include: SRC_DIR,
           //   // loader: 'css-loader',
@@ -160,6 +180,7 @@ export default {
           //       : '[hash:base64:5]',
           //   },
           // },
+
           {
             include: SRC_DIR,
             use: [
@@ -167,34 +188,27 @@ export default {
               {
                 loader: 'css-loader',
                 options: {
-                  modules: true
-                }
-              }
-            ]
-            // loader: 'css-loader',
-            // loader: 'css-modules-typescript-loader',
-            // options: {
-            //   // CSS Loader https://github.com/webpack/css-loader
-            //   // importLoaders: 2,
-            //   // sourceMap: isDebug,
-            //   // namedExport: true,
-            //   // CSS Modules https://github.com/css-modules/css-modules
-            //   modules: true,
-            //   // camelCase: true,
-            //   // slient: true,
-            //   localIdentName: isDebug
-            //     ? '[name]-[local]-[hash:base64:5]'
-            //     : '[hash:base64:5]',
-            // },
+                  modules: {
+                    mode: 'local',
+                    context: path.resolve(__dirname, 'src'),
+                    localIdentName: isDebug
+                      ? '[name]-[local]-[hash:base64:5]'
+                      : '[hash:base64:5]',
+                  },
+                  sourceMap: isDebug,
+                  importLoaders: 2,
+                  // onlyLocals: true,
+                  localsConvention: 'camelCase',
+                },
+              },
+            ],
           },
 
           // Apply PostCSS plugins including autoprefixer
           {
             loader: 'postcss-loader',
             options: {
-              plugins: () => [
-                autoprefixer(),
-              ],
+              plugins: () => [autoprefixer()],
             },
           },
 

@@ -3,6 +3,7 @@ import { createBrowserHistory, History } from 'history';
 
 // Navigation manager, e.g. history.push('/home')
 // https://github.com/mjackson/history
+// eslint-disable-next-line import/no-mutable-exports
 let history!: History;
 
 if (process.env.BROWSER) {

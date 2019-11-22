@@ -2,13 +2,13 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/withStyles';
 import classes from './NotFound.less';
 
-interface IProps {
+interface Props {
   title: string;
 }
 
 @withStyles(classes)
-class NotFound extends React.PureComponent<IProps, {}> {
-  render() {
+class NotFound extends React.PureComponent<Props, {}> {
+  render(): JSX.Element {
     return (
       <div className={classes.root}>
         <div className={classes.container}>

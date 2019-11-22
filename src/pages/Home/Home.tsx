@@ -2,35 +2,42 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/withStyles';
 import { connect } from 'react-redux';
 import { Button, Progress } from 'antd';
+import { StoreState } from '@store/reducers';
 
 import Link from '@components/Link/Link';
 import { changeCount } from '@store/actions/changeCount';
+import A from '@components/A/A';
 
 import classes from './Home.less';
 
-interface IProps {
-  path: string;
+interface StateToProps {
   count: number;
+}
+
+interface Props extends StateToProps {
+  path: string;
+  // count: number;
   changeCount: (num: number) => void;
 }
 
 @withStyles(classes)
-class Home extends React.Component<IProps, {}> {
-  minues = () => {
+class Home extends React.Component<Props, {}> {
+  minues = (): void => {
     console.log('minues~~');
     // (this.props as any).dispatch(changeCount(-10));
     this.props.changeCount(-10);
   };
 
-  add = () => {
+  add = (): void => {
     console.log('add~~');
     // (this.props as any).dispatch(changeCount(10));
     this.props.changeCount(10);
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <div>
+        <A></A>
         <div className={classes.header}>当前pathname: {this.props.path}</div>
         <div className={classes.title}>welcome to home</div>
         <Button type="primary">hello!!!</Button>
@@ -62,7 +69,7 @@ class Home extends React.Component<IProps, {}> {
   }
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: StoreState): StateToProps => ({
   count: state.count,
 });
 
@@ -74,7 +81,4 @@ const mapStateToProps = (state: any) => ({
 
 const mapDispatchToProps = { changeCount };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

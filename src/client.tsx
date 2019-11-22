@@ -1,28 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+// import { Store } from 'redux';
 import { Provider } from 'react-redux';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import deepForceUpdate from 'react-deep-force-update';
 import queryString from 'query-string';
 import { Location, Action } from 'history';
-import App from './App';
+import { StoreState } from '@store/reducers';
+import App, { TContext } from './App';
 import history from './history';
 import { updateMeta } from './DOMUtils';
 import router from './routes/router';
 import configureStore from './store/configureStore';
 
-interface IWindow extends Window {
-  __INITIAL_STATE__: any;
+interface TWindow extends Window {
+  __INITIAL_STATE__: StoreState;
 }
-declare const window: IWindow;
+declare const window: TWindow;
 
-interface IContext {
-  // insertCss: (...styles: any[]) => () => void;
-  pathname: string;
-  query: queryString.ParsedQuery;
-  store: any;
-}
-
-const insertCss = (...styles: any[]) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const insertCss = (...styles: any[]): (() => void) => {
   // eslint-disable-next-line no-underscore-dangle
   const removeCss = styles.map(x => x._insertCss());
   return () => {
@@ -30,27 +27,26 @@ const insertCss = (...styles: any[]) => {
   };
 };
 
-const context: IContext = {
-  // insertCss: (...styles: any[]) => {
-  //   // eslint-disable-next-line no-underscore-dangle
-  //   const removeCss = styles.map(x => x._insertCss());
-  //   return () => {
-  //     removeCss.forEach(f => f());
-  //   };
-  // },
+const context: TContext = {
   pathname: '',
   query: {},
+  // eslint-disable-next-line no-underscore-dangle
   store: configureStore(window.__INITIAL_STATE__),
 };
 
 const container = document.getElementById('app');
 let currentLocation = history.location;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let appInstance: any;
 
 const scrollPositionsHistory = {};
 
 // Re-render the app when window.location changes
-async function onLocationChange(location: Location, action?: Action) {
+async function onLocationChange(
+  location: Location,
+  action?: Action,
+): Promise<void> {
   // Remember the latest scroll position for the previous location
   scrollPositionsHistory[currentLocation.key!] = {
     scrollX: window.pageXOffset,
@@ -105,9 +101,9 @@ async function onLocationChange(location: Location, action?: Action) {
           return;
         }
 
-        document.title = route.title;
+        document.title = route.title || '';
 
-        updateMeta('description', route.description);
+        updateMeta('description', route.description || '');
         // Update necessary tags in <head> at runtime here, ie:
         // updateMeta('keywords', route.keywords);
         // updateCustomMeta('og:url', route.canonicalUrl);
@@ -157,16 +153,17 @@ async function onLocationChange(location: Location, action?: Action) {
 history.listen(onLocationChange);
 onLocationChange(currentLocation);
 
-declare const module: IHotNodeModule;
+declare const module: THotNodeModule;
 
 // Enable Hot Module Replacement (HMR)
 if (module.hot) {
   module.hot.accept('./routes/router', () => {
     if (appInstance && appInstance.updater.isMounted(appInstance)) {
+      console.log('ddddddddddddxxxxxxxxxx');
       // Force-update the whole tree, including components that refuse to update
       deepForceUpdate(appInstance);
     }
-
+    console.log('ssssssssssssss');
     onLocationChange(currentLocation);
   });
 }

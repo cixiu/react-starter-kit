@@ -5,4 +5,8 @@ const rootReducer = combineReducers({
   count,
 });
 
+export interface StoreState {
+  count: number;
+}
+
 export default rootReducer;

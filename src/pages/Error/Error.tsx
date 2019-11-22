@@ -2,16 +2,17 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/withStyles';
 import classes from './Error.less';
 
-interface IProps {
+interface Props {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
 }
 
-class ErrorPage extends React.Component<IProps, {}> {
+class ErrorPage extends React.Component<Props, {}> {
   static defaultProps = {
     error: null,
   };
 
-  render() {
+  render(): JSX.Element {
     if (__DEV__ && this.props.error) {
       return (
         <div>

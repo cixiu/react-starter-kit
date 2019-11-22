@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
 import path from 'path';
 import express, { Express, ErrorRequestHandler } from 'express';
@@ -8,18 +9,22 @@ import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
 import PrettyError from 'pretty-error';
 
-// import PrettyError from 'pretty-error';
-import App from './App';
-import Html from './Html';
 import configureStore from '@store/configureStore';
 import { ErrorPageWithoutStyle } from '@pages/Error/Error';
 import errorPageStyle from '@pages/Error/Error.less';
+import App from './App';
+import Html, { HtmlProps } from './Html';
 import router from './routes/router';
 
-let chunks: any;
+interface Chunks {
+  [key: string]: string[];
+}
+
+let chunks: Chunks;
 
 // 生产环境下只需要引入一次
 if (!__DEV__) {
+  // eslint-disable-next-line global-require
   chunks = require('./chunk-manifest.json');
 }
 
@@ -42,7 +47,7 @@ const app = express();
 // If you are using proxy from external machine, you can set TRUST_PROXY env
 // Default is to trust proxy headers only from loopback interface.
 // -----------------------------------------------------------------------------
-const trustProxy = process.env.trustProxy;
+const { trustProxy } = process.env;
 app.set('trust proxy', trustProxy);
 
 //
@@ -62,7 +67,8 @@ app.get('*', async (req, res, next) => {
 
     // Enables critical path CSS rendering
     // https://github.com/kriasoft/isomorphic-style-loader
-    const insertCss = (...styles: any[]) => {
+    const insertCss = (...styles: any[]): void => {
+      // eslint-disable-next-line no-underscore-dangle
       styles.forEach(style => css.add(style._getCss()));
     };
 
@@ -89,7 +95,7 @@ app.get('*', async (req, res, next) => {
       return;
     }
 
-    const data = { ...route };
+    const data = { ...route } as HtmlProps;
     data.children = ReactDOM.renderToString(
       <Provider store={store}>
         <App context={context} insertCss={insertCss}>
@@ -99,16 +105,16 @@ app.get('*', async (req, res, next) => {
     );
     data.styles = [{ id: 'css', cssText: [...css].join('') }];
 
-    const scripts = new Set();
+    const scripts = new Set<string>();
 
     if (__DEV__) {
       const chunksStr = fs.readFileSync('./build/chunk-manifest.json', 'utf8');
       chunks = JSON.parse(chunksStr);
     }
 
-    const addChunk = (chunk: any) => {
+    const addChunk = (chunk: string): void => {
       if (chunks[chunk]) {
-        chunks[chunk].forEach((asset: any) => scripts.add(asset));
+        chunks[chunk].forEach((asset: string) => scripts.add(asset));
       } else if (__DEV__) {
         throw new Error(`Chunk with name '${chunk}' cannot be found`);
       }
@@ -151,6 +157,8 @@ const errorRequestHandler: ErrorRequestHandler = (err, req, res, next) => {
     <Html
       title="Internal Server Error"
       description={err.message}
+      component=""
+      // eslint-disable-next-line no-underscore-dangle
       styles={[{ id: 'css', cssText: (errorPageStyle as any)._getCss() }]}
     >
       {ReactDOM.renderToString(<ErrorPageWithoutStyle error={err} />)}
@@ -177,12 +185,12 @@ if (!module.hot) {
 // Hot Module Replacement
 // -----------------------------------------------------------------------------
 // 开发环境
-declare const module: IHotNodeModule;
-interface IAppExtendProps extends Express {
-  hot: IHot;
+declare const module: THotNodeModule;
+interface AppExtendProps extends Express {
+  hot: THot;
 }
 if (module.hot) {
-  (app as IAppExtendProps).hot = module.hot;
+  (app as AppExtendProps).hot = module.hot;
   module.hot.accept('./routes/router');
 }
 

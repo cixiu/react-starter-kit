@@ -1,28 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * 路由配置相关的ts定义文件
  */
 
-import { RouteContext, Route, /* Params */ } from 'universal-router';
+import { RouteContext, Route, Result } from 'universal-router';
 import { Store } from 'redux';
+import { StoreState } from '@store/reducers';
 
-interface IRouteChildren extends Route {
+interface RouteChildren extends Route {
   load?: () => Promise<any>;
-  children?: IRouteChildren[];
+  children?: RouteChildren[];
 }
 
 /**
  * action函数的ctx参数
  */
-export interface IActionContext extends RouteContext<any> {
-  store: Store;
+export interface ActionContext extends RouteContext<any> {
+  store: Store<StoreState>;
 }
 
 /**
  * 主路由配置
  */
-export interface IRoute extends Route {
+export interface TRoute extends Route {
   // path?: string;
-  children: IRouteChildren[];
-  // action?: (ctx: IActionContext, params?: Params) => any;
+  children: RouteChildren[];
+  // action?: (ctx: ActionContext, params?: Params) => any;
   // load(): Promise<any>
+}
+
+export interface ActionReturn {
+  title?: string;
+  description?: string;
+  chunks?: string[];
+  chunk?: string;
+  component: JSX.Element | string;
+  // redirect route path
+  redirect?: string;
+  // response status code
+  status?: number;
 }
