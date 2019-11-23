@@ -136,6 +136,10 @@ const serverConfig = {
       raw: true,
       entryOnly: false,
     }),
+
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    })
   ],
 
   // Do not replace node globals with polyfills

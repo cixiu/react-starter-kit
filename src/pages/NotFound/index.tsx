@@ -1,11 +1,13 @@
 import React from 'react';
-import { ActionReturn } from '@routes/routes';
+import { ActionReturn, ActionContext } from '@routes/routes';
+import { changeCount } from '@store/actions/changeCount';
 
 import NotFound from './NotFound';
 
 const title = 'Page Not Found';
 
-function action(): ActionReturn {
+function action(ctx: ActionContext): ActionReturn {
+  ctx.store.dispatch(changeCount(10));
   return {
     chunks: ['not-found'],
     title,

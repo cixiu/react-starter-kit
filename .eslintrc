@@ -42,6 +42,7 @@
     "indent": "off",
     "no-param-reassign": "off",
     "no-console": "off",
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+    "class-methods-use-this": "off"
   }
 }

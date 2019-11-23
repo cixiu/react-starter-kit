@@ -31,7 +31,13 @@ const clientConfig = {
         test: /\.(css|less)$/,
         include: /[\\/]node_modules[\\/].*antd/,
         use: [
-          ExtractCssChunks.loader,
+          {
+            loader: ExtractCssChunks.loader,
+            options: {
+              hot: isDebug,
+              reloadAll: true,
+            },
+          },
           {
             loader: 'css-loader',
           },
@@ -55,7 +61,6 @@ const clientConfig = {
       chunkFilename: isDebug
         ? 'static/css/[name].chunk.css'
         : 'static/css/[name].[chunkhash:8].chunk.css',
-      hot: isDebug && true,
     }),
     // 以一个单独的进程来运行ts类型检查和lint来加快编译速度，配合ts-loader使用
     new ForkTsCheckerWebpackPlugin({

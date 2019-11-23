@@ -22,7 +22,6 @@ class Link extends React.Component<Props, {}> {
 
   handleClick = (event: React.MouseEvent): void => {
     if (this.props.onClick) {
-      console.log(event.target);
       this.props.onClick(event);
     }
 

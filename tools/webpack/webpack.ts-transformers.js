@@ -11,10 +11,7 @@ const tsImportPluginFactory = createTransformer({
   libraryName: 'antd',
   // libraryDirectory: 'es',
   // 自定义引入文件
-  style: name => {
-    console.log(name);
-    return `${name}/style/index.less`;
-  },
+  style: name => `${name}/style/index.less`,
 });
 
 const getCustomTransformers = () => ({ before: [tsImportPluginFactory] });

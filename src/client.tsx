@@ -6,7 +6,9 @@ import { Provider } from 'react-redux';
 import deepForceUpdate from 'react-deep-force-update';
 import queryString from 'query-string';
 import { Location, Action } from 'history';
+import NProgress from 'nprogress';
 import { StoreState } from '@store/reducers';
+
 import App, { TContext } from './App';
 import history from './history';
 import { updateMeta } from './DOMUtils';
@@ -17,6 +19,8 @@ interface TWindow extends Window {
   __INITIAL_STATE__: StoreState;
 }
 declare const window: TWindow;
+
+NProgress.configure({ showSpinner: false });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const insertCss = (...styles: any[]): (() => void) => {
@@ -47,6 +51,11 @@ async function onLocationChange(
   location: Location,
   action?: Action,
 ): Promise<void> {
+  if (action) {
+    console.log(`history location changed, action is ${action}`);
+    NProgress.start();
+  }
+
   // Remember the latest scroll position for the previous location
   scrollPositionsHistory[currentLocation.key!] = {
     scrollX: window.pageXOffset,
@@ -159,11 +168,10 @@ declare const module: THotNodeModule;
 if (module.hot) {
   module.hot.accept('./routes/router', () => {
     if (appInstance && appInstance.updater.isMounted(appInstance)) {
-      console.log('ddddddddddddxxxxxxxxxx');
       // Force-update the whole tree, including components that refuse to update
       deepForceUpdate(appInstance);
     }
-    console.log('ssssssssssssss');
+    console.log('[HMR] 热更新了');
     onLocationChange(currentLocation);
   });
 }
