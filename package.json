@@ -150,7 +150,8 @@
     "write-file-webpack-plugin": "^4.5.1"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --no-ignore --fix",
       "git add --force"
     ],
     "*.{json,md,graphql}": [
