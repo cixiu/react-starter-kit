@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import express, { Express, ErrorRequestHandler } from 'express';
+import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import React from 'react';
@@ -15,6 +16,7 @@ import errorPageStyle from '@pages/Error/Error.less';
 import App from './App';
 import Html, { HtmlProps } from './Html';
 import router from './routes/router';
+import LoginRouter, { secret, cookieKey } from './middleware/login';
 
 interface Chunks {
   [key: string]: string[];
@@ -23,6 +25,7 @@ interface Chunks {
 let chunks: Chunks;
 
 // 生产环境下只需要引入一次
+// webpack中配置了 __DEV__ 变量
 if (!__DEV__) {
   // eslint-disable-next-line global-require
   chunks = require('./chunk-manifest.json');
@@ -58,10 +61,27 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use('/proxy/login', LoginRouter);
+
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
 app.get('*', async (req, res, next) => {
+  let userInfo = {};
+  try {
+    const jwtToken = Buffer.from(req.cookies[cookieKey], 'base64').toString();
+    console.log(`jwtToken: ${jwtToken}`);
+    const decode = jwt.verify(jwtToken, secret) as { data: object };
+    console.log(decode);
+    userInfo = { ...decode.data };
+  } catch (err) {
+    if (!req.cookies[cookieKey]) {
+      console.log('用户暂未登录');
+    } else {
+      console.log(`jwt验证失败, message: ${err.message}`);
+    }
+    userInfo = {};
+  }
   try {
     const css = new Set();
 
@@ -72,8 +92,11 @@ app.get('*', async (req, res, next) => {
       styles.forEach(style => css.add(style._getCss()));
     };
 
+    // 用户的等下信息，在登录后将用户信息加密存入 cookie 中，
+    // 使用时，在从 cookie 中取出解密
     const initialState = {
       count: 10,
+      userInfo,
     };
 
     const store = configureStore(initialState);
