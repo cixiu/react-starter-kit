@@ -38,6 +38,7 @@
     ],
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/camelcase": "off",
     "no-plusplus": "off",
     "indent": "off",
     "no-param-reassign": "off",

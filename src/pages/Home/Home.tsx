@@ -3,12 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Progress } from 'antd';
 import NProgress from 'nprogress';
 import useStyles from 'isomorphic-style-loader/useStyles';
-import axios from 'axios';
 import { StoreState } from '@store/reducers';
 
 import Link from '@components/Link/Link';
 import { changeCount } from '@store/actions/changeCount';
-import { addUserInfo } from '@store/actions/userInfo';
+import { getUserInfo } from '@store/actions/userInfo';
 import A from '@components/A/A';
 
 import classes from './Home.less';
@@ -39,9 +38,10 @@ const Home = (props: Props): JSX.Element => {
   };
 
   const login = async (): Promise<void> => {
-    const res = await axios.post('/proxy/login');
-    dispatch(addUserInfo(res.data));
-    console.log(res.data);
+    // const res = await axios.post('/proxy/login');
+    // dispatch(addUserInfo(res.data));
+    dispatch(getUserInfo(7));
+    console.log(userInfo);
   };
 
   return (
@@ -66,10 +66,10 @@ const Home = (props: Props): JSX.Element => {
       <Progress percent={10} />
 
       <Link to="/not-found">导航一下试试！！!</Link>
-      {userInfo.name ? (
+      {userInfo.username ? (
         <div>
           <p>您已登录</p>
-          <p>用户名： {userInfo.name}</p>
+          <p>用户名： {userInfo.username}</p>
         </div>
       ) : (
         <Button type="primary" className={classes.loginBtn} onClick={login}>

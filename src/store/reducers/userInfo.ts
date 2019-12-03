@@ -1,8 +1,12 @@
 import * as types from '../actionTypes';
 
 export interface UserInfo {
-  name?: string;
-  age?: number;
+  avatar?: string;
+  createAt?: number;
+  create_address?: string;
+  create_time?: string;
+  id?: number;
+  username?: string;
 }
 
 export interface UserInfoAction {

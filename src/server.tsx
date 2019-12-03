@@ -8,11 +8,14 @@ import bodyParser from 'body-parser';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
+// import { ThunkDispatch } from 'redux-thunk';
 import PrettyError from 'pretty-error';
 
 import configureStore from '@store/configureStore';
 import { ErrorPageWithoutStyle } from '@pages/Error/Error';
 import errorPageStyle from '@pages/Error/Error.less';
+import { getUserInfo, addUserInfo } from '@store/actions/userInfo';
+import { StoreState } from '@store/reducers';
 import App from './App';
 import Html, { HtmlProps } from './Html';
 import router from './routes/router';
@@ -68,12 +71,14 @@ app.use('/proxy/login', LoginRouter);
 // -----------------------------------------------------------------------------
 app.get('*', async (req, res, next) => {
   let userInfo = {};
+  let userId;
   try {
     const jwtToken = Buffer.from(req.cookies[cookieKey], 'base64').toString();
     console.log(`jwtToken: ${jwtToken}`);
-    const decode = jwt.verify(jwtToken, secret) as { data: object };
+    const decode = jwt.verify(jwtToken, secret) as { data: { userId: string } };
     console.log(decode);
-    userInfo = { ...decode.data };
+    // userInfo = { ...decode.data };
+    userId = decode.data.userId;
   } catch (err) {
     if (!req.cookies[cookieKey]) {
       console.log('用户暂未登录');
@@ -92,7 +97,7 @@ app.get('*', async (req, res, next) => {
       styles.forEach(style => css.add(style._getCss()));
     };
 
-    // 用户的等下信息，在登录后将用户信息加密存入 cookie 中，
+    // 用户的登录信息，在登录后将用户信息加密存入 cookie 中，
     // 使用时，在从 cookie 中取出解密
     const initialState = {
       count: 10,
@@ -100,6 +105,12 @@ app.get('*', async (req, res, next) => {
     };
 
     const store = configureStore(initialState);
+    if (userId) {
+      // (store.dispatch as ThunkDispatch<StoreState, any, any>)(
+      //   getUserInfo(+userId),
+      // );
+      store.dispatch(addUserInfo({ username: '你好呀' }));
+    }
 
     // Global (context) variables that can be easily accessed from any React component
     // https://facebook.github.io/react/docs/context.html
