@@ -8,14 +8,12 @@ import bodyParser from 'body-parser';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
-// import { ThunkDispatch } from 'redux-thunk';
 import PrettyError from 'pretty-error';
 
 import configureStore from '@store/configureStore';
+import { getUserInfo } from '@store/actions/userInfo';
 import { ErrorPageWithoutStyle } from '@pages/Error/Error';
 import errorPageStyle from '@pages/Error/Error.less';
-import { getUserInfo, addUserInfo } from '@store/actions/userInfo';
-import { StoreState } from '@store/reducers';
 import App from './App';
 import Html, { HtmlProps } from './Html';
 import router from './routes/router';
@@ -64,20 +62,19 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// 代理用户的登录，在登录后将用户信息加密存入 cookie 中，
+// 使用时，在从 cookie 中取出解密
 app.use('/proxy/login', LoginRouter);
 
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------
 app.get('*', async (req, res, next) => {
-  let userInfo = {};
   let userId;
+
   try {
     const jwtToken = Buffer.from(req.cookies[cookieKey], 'base64').toString();
-    console.log(`jwtToken: ${jwtToken}`);
     const decode = jwt.verify(jwtToken, secret) as { data: { userId: string } };
-    console.log(decode);
-    // userInfo = { ...decode.data };
     userId = decode.data.userId;
   } catch (err) {
     if (!req.cookies[cookieKey]) {
@@ -85,8 +82,8 @@ app.get('*', async (req, res, next) => {
     } else {
       console.log(`jwt验证失败, message: ${err.message}`);
     }
-    userInfo = {};
   }
+
   try {
     const css = new Set();
 
@@ -97,19 +94,15 @@ app.get('*', async (req, res, next) => {
       styles.forEach(style => css.add(style._getCss()));
     };
 
-    // 用户的登录信息，在登录后将用户信息加密存入 cookie 中，
-    // 使用时，在从 cookie 中取出解密
     const initialState = {
       count: 10,
-      userInfo,
+      userInfo: {},
     };
 
     const store = configureStore(initialState);
+    // 如果用户已经登录了，则获取用户的信息，在加入 redux 中
     if (userId) {
-      // (store.dispatch as ThunkDispatch<StoreState, any, any>)(
-      //   getUserInfo(+userId),
-      // );
-      store.dispatch(addUserInfo({ username: '你好呀' }));
+      await store.dispatch(getUserInfo(+userId));
     }
 
     // Global (context) variables that can be easily accessed from any React component

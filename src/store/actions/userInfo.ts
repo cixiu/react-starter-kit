@@ -5,6 +5,11 @@ import { StoreState } from '@store/reducers';
 
 import { USER_INFO } from '../actionTypes';
 
+interface LoginData {
+  username: string;
+  password: string;
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export const addUserInfo = (userInfo: UserInfo): UserInfoAction => {
   return {
@@ -13,15 +18,35 @@ export const addUserInfo = (userInfo: UserInfo): UserInfoAction => {
   };
 };
 
-export const getUserInfo = (userId: number) => async (
+export const postLogin = (data: LoginData) => async (
   dispatch: Dispatch<UserInfoAction>,
   getState: () => StoreState,
 ): Promise<UserInfo> => {
   const url = `/proxy/login`;
   try {
-    console.log('loggggggggggggggg');
-    const res = await axios.post(url, {
-      user_id: userId,
+    console.log('login...');
+    const res = await axios.post(url, data);
+    if (res.data.code === 0) {
+      dispatch(addUserInfo(res.data.data));
+    }
+    return Promise.resolve(res.data.data);
+  } catch (err) {
+    console.log(err);
+    return Promise.reject(err);
+  }
+};
+
+export const getUserInfo = (userId: number) => async (
+  dispatch: Dispatch<UserInfoAction>,
+  getState: () => StoreState,
+): Promise<UserInfo> => {
+  const url = 'https://www.tzpcc.cn/api/user/info';
+  try {
+    console.log('getUserInfo...');
+    const res = await axios.get(url, {
+      params: {
+        user_id: userId,
+      },
     });
     if (res.data.code === 0) {
       dispatch(addUserInfo(res.data.data));

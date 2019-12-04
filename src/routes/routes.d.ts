@@ -5,7 +5,7 @@
 
 import { RouteContext, Route, Result } from 'universal-router';
 import { Store } from 'redux';
-import { StoreState } from '@store/reducers';
+import { TStore } from '@store/configureStore';
 
 interface RouteChildren extends Route {
   load?: () => Promise<any>;
@@ -16,7 +16,7 @@ interface RouteChildren extends Route {
  * action函数的ctx参数
  */
 export interface ActionContext extends RouteContext<any> {
-  store: Store<StoreState>;
+  store: TStore;
 }
 
 /**

@@ -7,7 +7,7 @@ import { StoreState } from '@store/reducers';
 
 import Link from '@components/Link/Link';
 import { changeCount } from '@store/actions/changeCount';
-import { getUserInfo } from '@store/actions/userInfo';
+import { postLogin } from '@store/actions/userInfo';
 import A from '@components/A/A';
 
 import classes from './Home.less';
@@ -40,8 +40,12 @@ const Home = (props: Props): JSX.Element => {
   const login = async (): Promise<void> => {
     // const res = await axios.post('/proxy/login');
     // dispatch(addUserInfo(res.data));
-    dispatch(getUserInfo(7));
-    console.log(userInfo);
+    await dispatch(
+      postLogin({
+        username: '这是一个用户',
+        password: '123456',
+      }),
+    );
   };
 
   return (

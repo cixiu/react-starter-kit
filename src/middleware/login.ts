@@ -11,16 +11,10 @@ export const cookieKey = process.env.COOKIE_KEY ?? 'id_token';
 const expiresIn = 60 * 60 * 24 * 180; // 180 days
 
 router.post('/', async (req, res, next) => {
-  const url = `https://www.tzpcc.cn/api/user/info`;
+  const url = `https://www.tzpcc.cn/user/login`;
   const data = req.body;
   try {
-    console.log(data);
-    const response = await axios.get(url, {
-      params: {
-        user_id: data.user_id,
-      },
-    });
-    // console.log(response);
+    const response = await axios.post(url, data);
     if (response.data.code === 0) {
       const userId: string = response.data.data.id.toString();
       const token = jwt.sign(
@@ -34,18 +28,20 @@ router.post('/', async (req, res, next) => {
           expiresIn,
         },
       );
-      console.log(token);
       const cookieValue = Buffer.from(token).toString('base64');
 
       res.cookie(cookieKey, cookieValue, {
         maxAge: 1000 * expiresIn,
         httpOnly: true,
       });
-      console.log(response.data);
       res.json(response.data);
     }
   } catch (err) {
     console.log(err);
+    res.status(500).send({
+      code: 1,
+      message: '出错啦',
+    });
   }
 });
 

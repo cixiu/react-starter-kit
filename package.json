@@ -34,7 +34,7 @@
     "deploy": "babel-node tools/run deploy",
     "render": "babel-node tools/run render",
     "serve": "babel-node tools/run runServer",
-    "start": "babel-node tools/run start"
+    "start": "babel-node tools/run start --tls-min-v1.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
