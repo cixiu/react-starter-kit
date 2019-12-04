@@ -49,6 +49,7 @@
     "history": "^4.10.1",
     "isomorphic-style-loader": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
+    "log4js": "^6.1.0",
     "nprogress": "^0.2.0",
     "pretty-error": "^2.1.1",
     "prop-types": "^15.7.2",
@@ -155,7 +156,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --no-ignore --fix",
+      "eslint --fix",
       "git add --force"
     ],
     "*.{json,md,graphql}": [

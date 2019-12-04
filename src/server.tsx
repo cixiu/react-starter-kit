@@ -202,7 +202,7 @@ app.use(errorRequestHandler);
 // -----------------------------------------------------------------------------
 // 生产环境下
 if (!module.hot) {
-  const PORT = 3001;
+  const PORT = process.env.PORT || 3002;
   app.listen(PORT, () => {
     console.info(`The server is running at http://localhost:${PORT}/`);
   });

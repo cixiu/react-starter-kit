@@ -74,6 +74,8 @@ export default {
       '@pages': resolvePath('src/pages'),
       '@components': resolvePath('src/components'),
       '@api': resolvePath('src/api'),
+      '@utils': resolvePath('src/utils'),
+      '@config': resolvePath('src/config'),
     },
     // Allow absolute paths in imports, e.g. import Button from 'components/Button'
     // Keep in sync with .flowconfig and .eslintrc
