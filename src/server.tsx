@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
 import PrettyError from 'pretty-error';
 
+import logger from '@config/index';
 import configureStore from '@store/configureStore';
 import { getUserInfo } from '@store/actions/userInfo';
 import { ErrorPageWithoutStyle } from '@pages/Error/Error';
@@ -32,8 +33,14 @@ if (!__DEV__) {
   chunks = require('./chunk-manifest.json');
 }
 
+// 处理一个 Promise 被拒绝，并且此 Promise 没有绑定错误处理器
 process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+  // console.error('Unhandled Rejection at:', p, 'reason:', reason);
+  logger.error(
+    '未处理的 Promise 拒绝(Unhandled Promise Rejection) - ',
+    '原因(reason): ',
+    (reason as any).message,
+  );
   // send entire app down. Process manager will restart it
   process.exit(1);
 });
@@ -180,6 +187,7 @@ pe.skipPackage('express');
 
 const errorRequestHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(pe.render(err));
+  logger.error('出错啦：', err.message);
   const html = ReactDOM.renderToStaticMarkup(
     <Html
       title="Internal Server Error"

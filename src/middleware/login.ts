@@ -1,6 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import logger from '@config/index';
 
 const router = express.Router();
 
@@ -34,10 +35,10 @@ router.post('/', async (req, res, next) => {
         maxAge: 1000 * expiresIn,
         httpOnly: true,
       });
-      res.json(response.data);
     }
+    res.json(response.data);
   } catch (err) {
-    console.log(err);
+    logger.error(`登录请求出错了, message: ${err.message}`);
     res.status(500).send({
       code: 1,
       message: '出错啦',
