@@ -18,13 +18,19 @@ class NotFound extends React.PureComponent<Props, {}> {
 
   render(): JSX.Element {
     return (
-      <div className={classes.root}>
-        <div className={classes.container}>
-          <h1 className={classes.title}>{this.props.title}!!</h1>
-          <p className={classes.content}>
-            Sorry, the page you were trying to view does not exist!!.
-          </p>
-          <Input />
+      <div
+        style={{
+          height: 3000,
+        }}
+      >
+        <div className={classes.root}>
+          <div className={classes.container}>
+            <h1 className={classes.title}>{this.props.title}!!</h1>
+            <p className={classes.content}>
+              Sorry, the page you were trying to view does not exist!!.
+            </p>
+            <Input />
+          </div>
         </div>
       </div>
     );

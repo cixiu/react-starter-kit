@@ -12,7 +12,7 @@ export const cookieKey = process.env.COOKIE_KEY ?? 'id_token';
 const expiresIn = 60 * 60 * 24 * 180; // 180 days
 
 router.post('/', async (req, res, next) => {
-  const url = `https://www.tzpcc.cn/user/login`;
+  const url = `http://94.191.82.146:9004/user/login`;
   const data = req.body;
   try {
     const response = await axios.post(url, data);

@@ -8,6 +8,7 @@ import queryString from 'query-string';
 import { Location, Action } from 'history';
 import NProgress from 'nprogress';
 import { StoreState } from '@store/reducers';
+import { switchIsInitialRender } from '@store/actions/isInitialRender';
 
 import App, { TContext } from './App';
 import history from './history';
@@ -68,6 +69,10 @@ async function onLocationChange(
   currentLocation = location;
 
   const isInitialRender = !action;
+  if (isInitialRender) {
+    context.store.dispatch(switchIsInitialRender(false));
+  }
+
   try {
     context.pathname = location.pathname;
     context.query = queryString.parse(location.search);

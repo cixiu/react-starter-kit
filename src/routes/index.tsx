@@ -1,6 +1,5 @@
 import React from 'react';
 import { TRoute } from './routes';
-// import { Route } from 'universal-router';
 
 // The top-level (parent) route
 const routes: TRoute = {
@@ -29,7 +28,7 @@ const routes: TRoute = {
     }
 
     // Provide default values for title, description etc.
-    route.title = `${route.title || 'Untitled Page'} - www.reactstarterkit.com`;
+    route.title = `${route.title || 'Untitled Page'}`;
     route.description = route.description || '';
 
     return route;

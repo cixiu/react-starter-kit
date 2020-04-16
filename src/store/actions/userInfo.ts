@@ -40,7 +40,7 @@ export const getUserInfo = (userId: number) => async (
   dispatch: Dispatch<UserInfoAction>,
   getState: () => StoreState,
 ): Promise<UserInfo> => {
-  const url = 'https://www.tzpcc.cn/api/user/info';
+  const url = 'http://94.191.82.146:9002/api/user/info';
   try {
     console.log('getUserInfo...');
     const res = await axios.get(url, {

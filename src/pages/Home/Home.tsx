@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Progress } from 'antd';
+import { PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+
 import NProgress from 'nprogress';
 import useStyles from 'isomorphic-style-loader/useStyles';
 import { StoreState } from '@store/reducers';
@@ -49,7 +51,11 @@ const Home = (props: Props): JSX.Element => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        height: 2000,
+      }}
+    >
       <A></A>
       <div className={classes.header}>当前pathname: {props.path}</div>
       <div className={classes.title}>welcome to home</div>
@@ -57,13 +63,19 @@ const Home = (props: Props): JSX.Element => {
       <Button type="primary">你好</Button>
       <Button type="primary">你好啊</Button>
       <div>
-        <Button type="danger" size="large" onClick={minues}>
-          -
-        </Button>
+        <MinusCircleFilled
+          style={{
+            fontSize: 28,
+          }}
+          onClick={minues}
+        />
         <strong style={{ fontSize: 28 }}>{count}</strong>
-        <Button type="primary" size="large" onClick={add}>
-          +
-        </Button>
+        <PlusCircleFilled
+          style={{
+            fontSize: 28,
+          }}
+          onClick={add}
+        />
       </div>
 
       <Progress percent={99} />

@@ -104,6 +104,7 @@ app.get('*', async (req, res, next) => {
     const initialState = {
       count: 10,
       userInfo: {},
+      isInitialRender: true,
     };
 
     const store = configureStore(initialState);

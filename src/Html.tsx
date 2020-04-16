@@ -2,18 +2,6 @@ import React from 'react';
 import serialize from 'serialize-javascript';
 import { ActionReturn } from '@routes/routes';
 
-// interface Props {
-//   title: string;
-//   description: string;
-//   styles: Array<{
-//     id: string;
-//     cssText: string;
-//   }>;
-//   scripts: string[];
-//   app: { state: object };
-//   children: string;
-// }
-
 export interface HtmlProps extends ActionReturn {
   styles: Array<{
     id: string;
