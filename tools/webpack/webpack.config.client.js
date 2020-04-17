@@ -57,10 +57,10 @@ const clientConfig = {
     new ExtractCssChunks({
       filename: isDebug
         ? 'static/css/[name].css'
-        : 'static/css/[name].[chunkhash:8].css',
+        : 'static/css/[id].[chunkhash:8].css',
       chunkFilename: isDebug
         ? 'static/css/[name].chunk.css'
-        : 'static/css/[name].[chunkhash:8].chunk.css',
+        : 'static/css/[id].[chunkhash:8].chunk.css',
     }),
     // 以一个单独的进程来运行ts类型检查和lint来加快编译速度，配合ts-loader使用
     new ForkTsCheckerWebpackPlugin({

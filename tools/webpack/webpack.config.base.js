@@ -54,10 +54,10 @@ export default {
     pathinfo: isVerbose,
     filename: isDebug
       ? 'static/js/[name].js'
-      : 'static/js/[name].[chunkhash:8].js',
+      : 'static/js/[id].[chunkhash:8].js',
     chunkFilename: isDebug
       ? 'static/js/[name].chunk.js'
-      : 'static/js/[name].[chunkhash:8].chunk.js',
+      : 'static/js/[id].[chunkhash:8].chunk.js',
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
