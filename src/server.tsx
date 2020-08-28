@@ -9,13 +9,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import { Provider } from 'react-redux';
 import PrettyError from 'pretty-error';
+import { ParsedQuery } from 'query-string';
 
 import logger from '@config/index';
 import configureStore from '@store/configureStore';
 import { getUserInfo } from '@store/actions/userInfo';
 import { ErrorPageWithoutStyle } from '@pages/Error/Error';
 import errorPageStyle from '@pages/Error/Error.less';
-import App from './App';
+import App, { TContext } from './App';
 import Html, { HtmlProps } from './Html';
 import router from './routes/router';
 import LoginRouter, { secret, cookieKey } from './middleware/login';
@@ -115,11 +116,11 @@ app.get('*', async (req, res, next) => {
 
     // Global (context) variables that can be easily accessed from any React component
     // https://facebook.github.io/react/docs/context.html
-    const context = {
+    const context: TContext = {
       // insertCss,
       // The twins below are wild, be careful!
       pathname: req.path,
-      query: req.query,
+      query: req.query as ParsedQuery,
       store,
     };
 

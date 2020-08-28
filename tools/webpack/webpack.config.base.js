@@ -122,14 +122,21 @@ export default {
             },
           },
           {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+            },
+          },
+          {
             loader: 'ts-loader',
             options: {
               // ts-loader配合fork-ts-checker-webpack-plugin插件获取完全的类型检查
               transpileOnly: true,
-              getCustomTransformers: path.join(
-                __dirname,
-                './webpack.ts-transformers.js',
-              ),
+              // 开发环境下直接引用 antd.css 或者 antd.less 样式文件
+              // 生产环境下进行分包加载
+              getCustomTransformers: isDebug
+                ? () => {}
+                : path.join(__dirname, './webpack.ts-transformers.js'),
               compilerOptions: {
                 module: 'es2015',
               },

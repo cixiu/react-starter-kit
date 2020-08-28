@@ -44,16 +44,28 @@ const serverConfig = {
         include: /[\\/]node_modules[\\/].*antd/,
         use: [
           {
+            // for css-loader@4.x
+            /*
+            loader: 'css-loader',
+            options: {
+              modules: {
+                exportOnlyLocals: true,
+              },
+            },
+            */
+
             // for css-loader@3.x
             loader: 'css-loader',
             options: {
               onlyLocals: true,
             },
+
             // for css-loader@2.x
             /* loader: 'css-loader',
             options: {
               exportOnlyLocals: true,
             }, */
+
             // for css-loader@1.x
             // loader: 'css-loader/locals',
           },
@@ -72,21 +84,20 @@ const serverConfig = {
             ...rule,
             options: {
               ...rule.options,
-              presets: rule.options.presets.map(
-                preset =>
-                  preset[0] !== '@babel/preset-env'
-                    ? preset
-                    : [
-                        '@babel/preset-env',
-                        {
-                          targets: {
-                            node: pkg.engines.node.match(/(\d+\.?)+/)[0],
-                          },
-                          modules: false,
-                          useBuiltIns: false,
-                          debug: false,
+              presets: rule.options.presets.map(preset =>
+                preset[0] !== '@babel/preset-env'
+                  ? preset
+                  : [
+                      '@babel/preset-env',
+                      {
+                        targets: {
+                          node: pkg.engines.node.match(/(\d+\.?)+/)[0],
                         },
-                      ],
+                        modules: false,
+                        useBuiltIns: false,
+                        debug: false,
+                      },
+                    ],
               ),
             },
           };
@@ -139,7 +150,7 @@ const serverConfig = {
 
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,
-    })
+    }),
   ],
 
   // Do not replace node globals with polyfills

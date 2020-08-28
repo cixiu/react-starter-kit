@@ -34,8 +34,8 @@ const clientConfig = {
           {
             loader: ExtractCssChunks.loader,
             options: {
-              hot: isDebug,
-              reloadAll: true,
+              hmr: false,
+              reloadAll: false,
             },
           },
           {
@@ -65,11 +65,10 @@ const clientConfig = {
     // 以一个单独的进程来运行ts类型检查和lint来加快编译速度，配合ts-loader使用
     new ForkTsCheckerWebpackPlugin({
       async: false,
-      watch: [resolvePath('src')],
-      tsconfig: resolvePath('tsconfig.json'),
-      eslint: true,
-      checkSyntacticErrors: true,
-      silent: true,
+      typescript: true,
+      eslint: {
+        files: './src/**/*.{ts,tsx,js,jsx}',
+      },
     }),
     new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]),
     // Define free variables
@@ -132,9 +131,11 @@ const clientConfig = {
       name: 'runtime',
     },
     splitChunks: {
+      // chunks: 'all', 默认为 all
       cacheGroups: {
         commons: {
           chunks: 'initial',
+          // chunks: 'all',
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
         },

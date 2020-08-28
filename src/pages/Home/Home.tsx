@@ -1,6 +1,7 @@
+// import { hot } from 'react-hot-loader/root';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Progress } from 'antd';
+import { Button, Progress, Switch, Input, Rate, Slider } from 'antd';
 import { PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
 
 import NProgress from 'nprogress';
@@ -25,7 +26,7 @@ const Home = (props: Props): JSX.Element => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('home页面加载完成');
+    console.log('home页面加载完成!!');
     NProgress.done();
   }, []);
 
@@ -58,7 +59,7 @@ const Home = (props: Props): JSX.Element => {
     >
       <A></A>
       <div className={classes.header}>当前pathname: {props.path}</div>
-      <div className={classes.title}>welcome to home</div>
+      <div className={classes.title}>welcome to home@@</div>
       <Button type="primary">hello</Button>
       <Button type="primary">你好</Button>
       <Button type="primary">你好啊</Button>
@@ -80,6 +81,18 @@ const Home = (props: Props): JSX.Element => {
 
       <Progress percent={99} />
       <Progress percent={10} />
+      <div>
+        <Switch defaultChecked />
+      </div>
+      <div>
+        <Input />
+      </div>
+      <div>
+        <Rate></Rate>
+      </div>
+      <div>
+        <Slider defaultValue={30} />
+      </div>
 
       <Link to="/not-found">导航一下试试！！!</Link>
       {userInfo.username ? (

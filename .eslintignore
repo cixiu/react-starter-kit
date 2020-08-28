@@ -1,3 +1,4 @@
 tools/*
 typings/*
 *.d.ts
+babel.config.js

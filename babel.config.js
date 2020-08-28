@@ -24,4 +24,15 @@ module.exports = {
     '@babel/preset-react',
   ],
   ignore: ['node_modules', 'build'],
+  plugins: [
+    'react-hot-loader/babel',
+    // [
+    //   'import',
+    //   {
+    //     libraryName: 'antd',
+    //     libraryDirectory: 'lib',
+    //     style: 'css',
+    //   },
+    // ],
+  ],
 };
